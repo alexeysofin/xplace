@@ -1,0 +1,17 @@
+{% extends 'users/profile_base.html' %}
+{% block profile_content %}
+<h2 class="ui header">Security</h2>
+<h3 class="ui header">Change password</h3>
+{% for error in form.non_field_errors %}
+    <div class="ui error message">
+        <p>{{ error }}</p>
+    </div>
+{% endfor %}
+<form class="ui form" method="POST" action="" novalidate>
+    {% csrf_token %}
+    {% include 'form/field.html' with field=form.current_password %}
+    {% include 'form/field.html' with field=form.new_password %}
+    {% include 'form/field.html' with field=form.new_password_repeat %}
+    <button class="ui primary button">Save</button>
+</form>
+{% endblock %}

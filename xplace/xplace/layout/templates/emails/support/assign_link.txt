@@ -1,0 +1,1 @@
+To assign this ticket to yourself follow the link {{assign_link}}

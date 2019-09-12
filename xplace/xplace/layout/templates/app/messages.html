@@ -1,0 +1,11 @@
+{% if messages %}
+    {% for message in messages %}
+        <div class="ui {{ message.level_tag }} message">
+            <i class="close icon"></i>
+            <div class="header">
+           {{ message.extra_tags }}
+            </div>
+            <p>{{ message }}</p>
+        </div>
+    {% endfor %}
+{% endif %}

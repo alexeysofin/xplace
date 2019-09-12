@@ -1,0 +1,32 @@
+{% extends 'users/profile_base.html' %}
+{% block profile_content %}
+<div class="ui stackable grid">
+    <div class="thirteen wide column">
+        <h1 class="ui header">SSH keys</h1>
+    </div>
+    <div class="three wide column right aligned">
+        <a class="ui primary button" href="{% url 'account:ssh_keys:add' %}">Create</a>
+    </div>
+</div>
+<table class="stackable ui celled table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>MD5 fingerprint</th>
+        <th>Created date</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>
+            <a href="{% url 'account:ssh_keys:update' pk=object.pk %}">{{ object.name }}</a>
+        </td>
+        <td>{{ object.hash_md5 }}</td>
+        <td>{{ object.created_at }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% include 'app/pagination.html' with is_paginated=is_paginated paginator=paginator %}
+{% endblock %}

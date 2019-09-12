@@ -1,0 +1,64 @@
+body {
+    background-color: #FFFFFF;
+}
+.ui.menu .item img.logo {
+    margin-right: 1.5em;
+}
+.main.container {
+    margin-top: 7em;
+}
+.wireframe {
+    margin-top: 2em;
+}
+
+.top-navigation {
+    border-radius: 0em !important;
+}
+
+.main.container {
+    margin-top: 2em;
+}
+
+div.error-message {
+    color: #9f3a38;
+    font-size: .8em;
+    text-align: left;
+    padding-left: 0.2em;
+}
+
+.ui.header.definition {
+    margin-bottom: 0em;
+}
+
+.state-loader {
+    padding-left: 1em;
+}
+
+.ui.toggle.checkbox.loading label {
+    padding-left: 1em;
+}
+
+.ui.toggle.checkbox.loading .box:before, .ui.toggle.checkbox.loading label:before {
+    display: none;
+    padding-left: 0em;
+}
+
+.ui.toggle.checkbox.loading .box:after, .ui.toggle.checkbox.loading label:after {
+    display: none;
+}
+
+.ui.segment.main {
+    border: none;
+    box-shadow: none;
+}
+
+.ui.form .field .selection.dropdown {
+    width: 100%;
+}
+
+.ui.footer.segment {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 0;
+}

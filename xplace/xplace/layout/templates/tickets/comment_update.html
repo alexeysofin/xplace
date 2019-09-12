@@ -1,0 +1,16 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <h1 class="ui header">Update comment</h1>
+{% endblock %}
+{% block content %}
+{% include 'form/errors.html' with form=form %}
+<div class="ui segment">
+    <form class="ui form" method="POST" action="" novalidate>
+        {% csrf_token %}
+        {% include 'form/field.html' with field=form.message %}
+        <button class="ui primary button">Update</button>
+        <a href="{% url 'support:tickets:detail' pk=object.ticket.pk %}" class="ui button">Cancel</a>
+    </form>
+</div>
+{% endblock %}

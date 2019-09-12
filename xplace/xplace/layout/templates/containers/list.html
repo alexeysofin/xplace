@@ -1,0 +1,48 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+<div class="ui stackable grid">
+    <div class="fourteen wide column">
+        <h1 class="ui header">Containers</h1>
+    </div>
+    <div class="two wide column right aligned">
+        <a class="ui primary button" href="{% url 'compute:containers:add' %}">Create</a>
+    </div>
+</div>
+<div class="ui section divider"></div>
+{% endblock %}
+
+{% block content %}
+{% include 'common/list_search_form.html' %}
+<table class="stackable ui celled table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Hostname</th>
+        <th>Image</th>
+        <th>RAM</th>
+        <th>Disk size</th>
+        <th>CPU</th>
+        <th>Private ip</th>
+        <th>State</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>
+            <a href="{% url 'compute:containers:detail' pk=object.pk %}">{{ object.name }}</a>
+        </td>
+        <td>{{ object.hostname }}</td>
+        <td>{{ object.image.name }}</td>
+        <td>{{ object.ram }} MB</td>
+        <td>{{ object.disk_size }} GB</td>
+        <td>{{ object.num_cpus }} cores</td>
+        <td>{{ object.private_ipv4 }}</td>
+        <td>{{ object.state }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% include 'app/pagination.html' with is_paginated=is_paginated paginator=paginator %}
+{% endblock %}

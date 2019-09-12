@@ -1,0 +1,50 @@
+{% extends 'tickets/detail_base.html' %}
+{% block main_content %}
+<div class="ui segment">
+    <h2 class="ui header">Information</h2>
+    <div class="ui grid">
+        <div class="six wide column">
+            <h4 class="ui header definition">Title</h4>
+            <p>{{ object.title }}</p>
+            <h4 class="ui header definition">Created at</h4>
+            <p>{{ object.created_at }}</p>
+        </div>
+        <div class="six wide column">
+            <h4 class="ui header definition">User</h4>
+            <p>{{ object.user }}</p>
+            <h4 class="ui header definition">Assignee</h4>
+            <p>{{ object.assignee|default:"" }}</p>
+        </div>
+        <div class="four wide column">
+            <h4 class="ui header definition">Container</h4>
+            <p>{{ object.container|default:"" }}</p>
+            <h4 class="ui header definition">Domain</h4>
+            <p>{{ object.domain|default:"" }}</p>
+        </div>
+    </div>
+    <h4 class="ui header definition">Description</h4>
+    <p>{{object.description}}</p>
+</div>
+{% for comment in object.comments.all %}
+<div class="ui segment">
+    <h4>{{ comment.created_at }} - {{ comment.user }}</h4>
+    <p>{{comment.message}}</p>
+    {% if comment.user == request.user %}
+    <p>
+        <a href="{% url 'support:tickets:comment_update' pk=comment.pk %}">Edit</a>
+        <a href="{% url 'support:tickets:comment_delete' pk=comment.pk %}">Delete</a>
+    </p>
+    {% endif %}
+</div>
+{% endfor %}
+<div class="ui segment">
+    <h2 class="ui header">Leave comment</h2>
+    {% include 'form/errors.html' with form=comment_form %}
+    <form class="ui form" method="POST" action="{% url 'support:tickets:comment' %}" novalidate>
+        {% csrf_token %}
+        {% include 'form/field.html' with field=comment_form.message %}
+        {{comment_form.ticket}}
+        <button class="ui primary button">Comment</button>
+    </form>
+</div>
+{% endblock %}

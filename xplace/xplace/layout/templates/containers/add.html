@@ -1,0 +1,23 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <h1 class="ui header">Create container</h1>
+{% endblock %}
+{% block content %}
+{% include 'form/errors.html' with form=form %}
+<div class="ui segment">
+    <form class="ui form" method="POST" action="" novalidate>
+        {% csrf_token %}
+        {% include 'form/field.html' with field=form.name %}
+        {% include 'form/field.html' with field=form.hostname_prefix %}
+        {% include 'form/field.html' with field=form.host %}
+        {% include 'form/field.html' with field=form.image %}
+        {% include 'form/field.html' with field=form.cpus %}
+        {% include 'form/field.html' with field=form.ram %}
+        {% include 'form/field.html' with field=form.disk_size %}
+        {% include 'form/field.html' with field=form.user %}
+        {% include 'form/field.html' with field=form.ssh_keys %}
+        <button class="ui primary button">Create</button>
+    </form>
+</div>
+{% endblock %}

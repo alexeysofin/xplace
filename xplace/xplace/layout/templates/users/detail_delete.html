@@ -1,0 +1,13 @@
+{% extends 'users/detail_base.html' %}
+{% block main_content %}
+    <div class="ui segment">
+        <h2 class="ui header">Are you sure you want to delete this user?</h2>
+        {% include 'form/errors.html' with form=form %}
+        <form class="ui form" method="POST" action="" novalidate>
+            {% csrf_token %}
+            {{ form.dummy }}
+            <button class="ui primary negative button">Delete</button>
+            <a href="{% url 'users:detail' pk=object.pk %}" class="ui button">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

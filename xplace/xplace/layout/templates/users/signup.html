@@ -1,0 +1,30 @@
+{% extends 'users/base.html' %}
+{% block content %}
+{% if link_sent %}
+    <div class="ui info message">
+        <div class="header">
+       One more step to finish!
+        </div>
+        <p>We have emailed you the confirmation link.
+           Please follow the instructions from the email.</p>
+    </div>
+{% else %}
+    <form class="ui large form" method="POST" action="" novalidate>
+        {% csrf_token %}
+        <div class="ui stacked segment">
+            {% include 'form/field.html' with field=form.email nolabel=True %}
+            {% include 'form/field.html' with field=form.language nolabel=True %}
+            {% include 'form/field.html' with field=form.password nolabel=True %}
+            {% include 'form/field.html' with field=form.password_repeat nolabel=True %}
+            <button class="ui fluid large teal submit button">Sign up</button>
+        </div>
+        <div class="ui error message"></div>
+    </form>
+    <div class="ui message">
+        Already have an account? <a href="{% url 'account:login' %}">Login</a>
+    </div>
+{% endif %}
+{% endblock %}
+{% block title %}
+Create a new account
+{% endblock%}

@@ -1,0 +1,22 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <h1 class="ui header">Manage image {{ object.name }}</h1>
+{% endblock %}
+{% block content %}
+    <div class="ui stackable grid">
+        <div class="four wide column">
+            <div class="ui fluid vertical tabular menu">
+                {% url 'compute:images:detail' pk=object.pk as detail_url %}
+                <a class="item {% if request.path == detail_url %}active{% endif %}" href="{{ detail_url }}">Information</a>
+                {% url 'compute:images:settings' pk=object.pk as settings_url %}
+                <a class="item {% if request.path == settings_url %}active{% endif %}" href="{{ settings_url }}">Settings</a>
+                {% url 'compute:images:delete' pk=object.pk as delete_url %}
+                <a class="item {% if request.path == delete_url %}active{% endif %}" href="{{ delete_url }}">Delete</a>
+            </div>
+        </div>
+        <div class="twelve wide column">
+            {% block main_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'containers/detail_base.html' %}
+{% block main_content %}
+<div class="ui segment"><h2 class="ui header">Container events</h2>
+    <div class="ui feed">
+        {% for event in events %}
+        <div class="event">
+            <div class="label">
+                <i class="{{ event.icon }} icon"></i>
+            </div>
+            <div class="content">
+                <div class="date">{{ event.created_at }}</div>
+                <div class="summary">{{ event.description }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'app/pagination.html' with is_paginated=is_paginated paginator=paginator %}
+</div>
+{% endblock %}

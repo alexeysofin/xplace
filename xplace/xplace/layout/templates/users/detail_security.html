@@ -1,0 +1,12 @@
+{% extends 'users/detail_base.html' %}
+{% block main_content %}
+    <div class="ui segment">
+        <h2 class="ui header">Security</h2>
+        {% include 'form/errors.html' with form=form %}
+        <form class="ui form" method="POST" action="" novalidate>
+            {% csrf_token %}
+            {% include 'form/field.html' with field=form.password %}
+            <button class="ui primary button">Save</button>
+        </form>
+    </div>
+{% endblock %}

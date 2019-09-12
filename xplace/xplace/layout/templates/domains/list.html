@@ -1,0 +1,40 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+<div class="ui stackable grid">
+    <div class="fourteen wide column">
+        <h1 class="ui header">Domains</h1>
+    </div>
+    <div class="two wide column right aligned">
+        <a class="ui primary button" href="{% url 'network:domains:add' %}">Create</a>
+    </div>
+</div>
+<div class="ui section divider"></div>
+{% endblock %}
+
+{% block content %}
+{% include 'common/list_search_form.html' %}
+<table class="stackable ui celled table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Include subdomains</th>
+        <th>Destination ip</th>
+        <th>Ports</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>
+            <a href="{% url 'network:domains:detail' pk=object.pk %}">{{ object.name }}</a>
+        </td>
+        <td>{% if object.include_sub_domains %}all{% else %}no{% endif %} subdomains</td>
+        <td>{{ object.destination_ip }}</td>
+        <td>{{ object.destination_http_port }}, {{ object.destination_https_port }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% include 'app/pagination.html' with is_paginated=is_paginated paginator=paginator %}
+{% endblock %}

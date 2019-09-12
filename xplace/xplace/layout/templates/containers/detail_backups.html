@@ -1,0 +1,28 @@
+{% extends 'containers/detail_base.html' %}
+{% block main_content %}
+<div class="ui segment"><h2 class="ui header">Container backups</h2>
+    <div class="ui feed">
+        <table class="stackable ui celled table">
+            <thead>
+            <tr>
+                <th>Created at</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for backup in backups %}
+            <tr>
+                <td>
+                    {{ backup.created_at }}
+                </td>
+                <td>
+                    <a href="{% url 'compute:containers:restore' pk=object.pk backup_id=backup.id %}">Restore</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'app/pagination.html' with is_paginated=is_paginated paginator=paginator %}
+</div>
+{% endblock %}

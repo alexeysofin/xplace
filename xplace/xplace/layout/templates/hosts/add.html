@@ -1,0 +1,22 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <h1 class="ui header">Create host</h1>
+{% endblock %}
+{% block content %}
+{% include 'form/errors.html' with form=form %}
+<div class="ui segment">
+    <form class="ui form" method="POST" action="" novalidate>
+        {% csrf_token %}
+        {% include 'form/field.html' with field=form.hostname %}
+        {% include 'form/field.html' with field=form.ram %}
+        {% include 'form/field.html' with field=form.disk_size %}
+        {% include 'form/field.html' with field=form.num_cpus %}
+        {% include 'form/field.html' with field=form.default_cpus %}
+        {% include 'form/field.html' with field=form.public_ipv4 %}
+        {% include 'form/field.html' with field=form.lvm_vgname %}
+        {% include 'form/field.html' with field=form.ssh_port_add %}
+        <button class="ui primary button">Create</button>
+    </form>
+</div>
+{% endblock %}

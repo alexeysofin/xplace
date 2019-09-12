@@ -1,0 +1,18 @@
+{% if field %}
+<div class="{% if field.errors %} error {% endif %} field">
+    {% if field.label and not nolabel and not field.field.widget.input_type == "checkbox" %}
+        <label>{{ field.label }}</label>
+    {% endif %}
+    <div class="ui {% if field.field.widget.input_type == 'checkbox' %}checkbox{% else %}input{% endif %}">
+        {{ field }}
+        {% if field.field.widget.input_type == "checkbox" %}
+            <label>{{ field.label }}</label>
+        {% endif %}
+    </div>
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <div class="error-message">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,22 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <h1 class="ui header">Create user</h1>
+{% endblock %}
+{% block content %}
+{% include 'form/errors.html' with form=form %}
+<div class="ui segment">
+    <form class="ui form" method="POST" action="" novalidate>
+        {% csrf_token %}
+        {% include 'form/field.html' with field=form.email %}
+        {% include 'form/field.html' with field=form.language %}
+        {% include 'form/field.html' with field=form.is_superuser %}
+        {% include 'form/field.html' with field=form.is_staff %}
+        {% include 'form/field.html' with field=form.first_name %}
+        {% include 'form/field.html' with field=form.last_name %}
+        {% include 'form/field.html' with field=form.available_ram %}
+        {% include 'form/field.html' with field=form.available_disk_size %}
+        <button class="ui primary button">Create</button>
+    </form>
+</div>
+{% endblock %}

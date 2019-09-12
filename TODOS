@@ -1,0 +1,16 @@
+1. otp https://github.com/pyauth/pyotp - how to deal with lost phone?
+2. Throttle auth views
+3. multiple containers / ip addresses on domain (balance algorithm)
+4. fix details pages (more info)
+5. monitoring - dashboards?
+6. manage certificates (letsencrypt)
+7. Filters/sorting/breadcrumbs - react?
+8. Request public ipv4
+9. Backup (rotate) - snapshots?
+10. Billing
+11. Custom images (baking)
+12. Multi-tenant accounts - account transfers?
+13. HA mode - net disks?
+14. Login events
+15. Github signin
+16. Check if all queries are optimized.

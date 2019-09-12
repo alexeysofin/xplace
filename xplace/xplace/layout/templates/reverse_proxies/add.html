@@ -1,0 +1,16 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <h1 class="ui header">Create reverse proxy</h1>
+{% endblock %}
+{% block content %}
+{% include 'form/errors.html' with form=form %}
+<div class="ui segment">
+    <form class="ui form" method="POST" action="" novalidate>
+        {% csrf_token %}
+        {% include 'form/field.html' with field=form.hostname %}
+        {% include 'form/field.html' with field=form.public_ipv4 %}
+        <button class="ui primary button">Create</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+<div class="ui stackable grid">
+    <div class="fourteen wide column">
+        <h1 class="ui header">Ram sizes</h1>
+    </div>
+    <div class="two wide column right aligned">
+        <a class="ui primary button" href="{% url 'compute:ram_sizes:add' %}">Create</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<table class="stackable ui celled table">
+    <thead>
+    <tr>
+        <th>Size</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>
+            <a href="{% url 'compute:ram_sizes:detail' pk=object.pk %}">{{ object.size }} (MB)</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% include 'app/pagination.html' with is_paginated=is_paginated paginator=paginator %}
+{% endblock %}

@@ -1,0 +1,11 @@
+<p>
+    You have successfully created container at xplace.pro<br/>
+    username: {{username}}<br/>
+    password: {{password}}<br/>
+    hostname: {{hostname}}<br/>
+    {% if ssh_keys %}
+    ssh keys: {{ssh_keys|join:", "}}
+    {% endif %}
+    <br/><br/>
+    {{ssh_connect_string}}
+</p>

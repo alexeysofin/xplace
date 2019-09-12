@@ -1,0 +1,65 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <div class="ui stackable grid">
+        <div class="thirteen wide column">
+            <h1 class="ui header">Manage container {{ object.hostname }}</h1>
+        </div>
+        <div class="three wide column right aligned">
+            {% include 'containers/partial/state.html' %}
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="ui stackable grid">
+        <div class="four wide column">
+            <div class="ui fluid vertical tabular menu">
+                {% url 'compute:containers:detail' pk=object.pk as detail_url %}
+                <a class="item {% if request.path == detail_url %}active{% endif %}" href="{{ detail_url }}">Information</a>
+                {% url 'compute:containers:settings' pk=object.pk as settings_url %}
+                <a class="item {% if request.path == settings_url %}active{% endif %}" href="{{ settings_url }}">Settings</a>
+                {% url 'compute:containers:delete' pk=object.pk as delete_url %}
+                <a class="item {% if request.path == delete_url %}active{% endif %}" href="{{ delete_url }}">Delete</a>
+                {% url 'compute:containers:power' pk=object.pk as power_url %}
+                <a class="item {% if request.path == power_url %}active{% endif %}" href="{{ power_url }}">Power</a>
+                {% url 'compute:containers:reset_password' pk=object.pk as reset_password_url %}
+                <a class="item {% if request.path == reset_password_url %}active{% endif %}" href="{{ reset_password_url }}">Reset password</a>
+                {% url 'compute:containers:events' pk=object.pk as events_url %}
+                <a class="item {% if request.path == events_url %}active{% endif %}" href="{{ events_url }}">Events</a>
+                {% url 'compute:containers:backups' pk=object.pk as backups_url %}
+                <a class="item {% if request.path == backups_url %}active{% endif %}" href="{{ backups_url }}">Backups</a>
+            </div>
+        </div>
+        <div class="twelve wide column">
+            {% block main_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+<script>
+    {% url 'compute:containers:partial' pk=object.pk as partial_url %}
+    var partial_url = '{{partial_url}}';
+
+    function check_state() {
+        var event_id = $("#template-state").data('event_id');
+        if (event_id) {
+            $.get(partial_url, function(data) {
+                Object.keys(data.templates).forEach(function(key){
+                    $('#template-'+key).replaceWith(
+                        data.templates[key]
+                    );
+                });
+
+                setTimeout(check_state, 5000);
+
+            });
+        }
+        return event_id;
+    }
+
+    $(document).ready(function(){
+        check_state();
+    });
+</script>
+{% endblock %}

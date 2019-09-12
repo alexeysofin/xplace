@@ -1,0 +1,23 @@
+{% extends 'domains/detail_base.html' %}
+{% block main_content %}
+<div class="ui segment">
+    <h2 class="ui header">Information</h2>
+    <div class="ui grid">
+        <div class="eight wide column">
+            <h4 class="ui header definition">Name</h4>
+            <p>{{ object.name }}</p>
+            <h4 class="ui header definition">Include sub-domains</h4>
+            <p>{% if object.include_sub_domains %}all{% else %}no{% endif %} subdomains</p>
+            <h4 class="ui header definition">Public ip</h4>
+            <p>{{ object.reverse_proxy.public_ipv4 }}</p></div>
+        <div class="eight wide column">
+            <h4 class="ui header definition">Destination ip</h4>
+            <p>{{ object.destination_ip }}</p>
+            <h4 class="ui header definition">Destination HTTP port</h4>
+            <p>{{ object.destination_http_port }}</p>
+            <h4 class="ui header definition">Destination HTTPs port</h4>
+            <p>{{ object.destination_https_port }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

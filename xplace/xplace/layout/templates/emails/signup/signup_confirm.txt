@@ -1,0 +1,2 @@
+To confirm registration, please follow the link:
+{{ confirmation_link }}

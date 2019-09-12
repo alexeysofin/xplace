@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>xplace.pro</title>
+    <link type="text/css" rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.0/semantic.min.css"/>
+    <link type="text/css" rel="stylesheet"
+          href="{% static 'app/main.css' %}"/>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="ui top-navigation stackable inverted menu">
+    <div class="ui container">
+        <a class="header item" href="/">
+            <img class="logo" src="https://via.placeholder.com/35x35">Xplace
+        </a>
+        <div class="ui dropdown item simple">
+            <div class="text">Compute</div>
+            <i class="dropdown icon"></i>
+            <div class="menu transition">
+                <a class="item" href="{% url 'compute:containers:list' %}">Containers</a>
+                {% if request.user.is_superuser %}
+                <a class="item " href="{% url 'compute:hosts:list' %}">Hosts</a>
+                <a class="item " href="{% url 'compute:ram_sizes:list' %}">RAM sizes</a>
+                <a class="item " href="{% url 'compute:disk_sizes:list' %}">Disk sizes</a>
+                <a class="item " href="{% url 'compute:images:list' %}">Images</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="ui dropdown item simple">
+            <div class="text">Network</div>
+            <i class="dropdown icon"></i>
+            <div class="menu transition">
+                <a class="item " href="{% url 'network:domains:list' %}">Domains</a>
+                {% if request.user.is_superuser %}
+                <a class="item " href="{% url 'network:reverse_proxies:list' %}">Reverse proxies</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="ui dropdown item simple">
+            <div class="text">Support</div>
+            <i class="dropdown icon"></i>
+            <div class="menu transition">
+                <a class="item " href="{% url 'support:tickets:list' %}">Tickets</a>
+            </div>
+        </div>
+
+        {% if request.user.is_superuser %}
+        <div class="ui dropdown item simple">
+            <div class="text">Users</div>
+            <i class="dropdown icon"></i>
+            <div class="menu transition">
+                    <a class="item " href="{% url 'users:list' %}">Users</a>
+            </div>
+        </div>
+        {% endif %}
+        <div class="right ui simple dropdown item">{{request.user.email}} <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item " href="/account/profile/">Profile</a>
+                {% if request.user.is_superuser %}
+                <a class="item " href="{% url 'admin:index' %}">Admin</a>
+                {% endif %}
+                <a class="item " href="/account/logout/">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui container main">
+    <div class="ui segment main">
+        {% block title %}{% endblock %}
+        {% block messages %} {% include 'app/messages.html' %} {% endblock %}
+        {% block content %}{% endblock %}
+    </div>
+    <div class="ui divider" style="margin-bottom: 3em; border: none;"></div>
+</div>
+<div class="ui footer basic segment inverted menu">
+  <div class="ui container">
+    <p>
+      &copy; 2019 xplace.pro. All rights reserved.
+    </p>
+  </div>
+</div>
+{% block modals %}
+{% endblock %}
+<script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.0/semantic.min.js"></script>
+<script>
+    $('select.dropdown').dropdown();
+    $('.message .close')
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        })
+    ;
+</script>
+{% block extra_javascript %}{% endblock %}
+</body>
+</html>

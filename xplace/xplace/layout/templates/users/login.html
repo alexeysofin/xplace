@@ -1,0 +1,26 @@
+{% extends 'users/base.html' %}
+{% block content %}
+{% for error in form.non_field_errors %}
+    <div class="ui error message">
+        <p>{{ error }}</p>
+    </div>
+{% endfor %}
+{% include 'app/messages.html' %}
+<form class="ui large form" method="POST" action="" novalidate>
+    {% csrf_token %}
+    <div class="ui stacked segment">
+        {% include 'form/field.html' with field=form.email nolabel=True %}
+        {% include 'form/field.html' with field=form.password nolabel=True %}
+        <button class="ui fluid large teal submit button">Login</button>
+    </div>
+</form>
+<div class="ui message">
+    First time here? <a href="{% url 'account:signup' %}">Signup</a>
+</div>
+<div class="ui message">
+    Forgot your password? <a href="{% url 'account:reset_password' %}">Reset password</a>
+</div>
+{% endblock %}
+{% block title %}
+Login to your account
+{% endblock%}

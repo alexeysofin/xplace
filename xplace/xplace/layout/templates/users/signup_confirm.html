@@ -1,0 +1,14 @@
+{% extends 'users/base.html' %}
+{% block content %}
+{% for error in form.non_field_errors %}
+    <div class="ui error message">
+        <p>{{ error }}</p>
+    </div>
+{% endfor %}
+<div class="ui message">
+    {{error}}
+</div>
+<div class="ui message">
+    Already have an account? <a href="{% url 'account:login' %}">Login</a>
+</div>
+{% endblock %}

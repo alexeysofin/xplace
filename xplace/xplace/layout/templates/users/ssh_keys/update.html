@@ -1,0 +1,11 @@
+{% extends 'users/profile_base.html' %}
+{% block profile_content %}
+<h2 class="ui header">Edit SSH key</h2>
+{% include 'form/errors.html' with form=form %}
+<form class="ui form" method="POST" action="" novalidate>
+    {% csrf_token %}
+    {% include 'form/field.html' with field=form.name %}
+    {% include 'form/field.html' with field=form.public_key %}
+    <button class="ui primary button">Save</button>
+</form>
+{% endblock %}

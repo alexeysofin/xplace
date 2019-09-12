@@ -1,0 +1,2 @@
+AMQP_URI: 'pyamqp://guest:guest@127.0.0.1:5672/xplace'
+HAPROXY_CONFIG_PATH: '/etc/haproxy/haproxy.cfg'

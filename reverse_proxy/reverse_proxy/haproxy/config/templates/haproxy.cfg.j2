@@ -1,0 +1,29 @@
+global
+    {%- for var in configuration.global_options %}
+    {%- if var.name == 'daemon' %}
+    {{var.name}}
+    {{var.value}}
+    {%- else %}
+    {{var.name}} {{var.value}}
+    {%- endif %}
+    {%- endfor %}
+
+defaults
+    {%- for var in configuration.defaults %}
+    {{var.name}} {{var.value}}
+    {%- endfor %}
+{% for frontend in configuration.frontends %}
+frontend {{frontend.name}}
+    {%- for var in frontend.options %}
+    {{var.name}} {{var.value}}
+    {%- endfor %}
+    {%- for var in frontend.use_backend %}
+    use_backend {{var.backend}} {{var.value}}
+    {%- endfor %}
+{% endfor %}
+{%- for backend in configuration.backends %}
+backend {{backend.name}}
+    {%- for var in backend.options %}
+    {{var.name}} {{var.value}}
+    {%- endfor %}
+{% endfor %}

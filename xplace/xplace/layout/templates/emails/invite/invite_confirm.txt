@@ -1,0 +1,2 @@
+You have been invited to xpace.pro. To confirm invite, please follow the link
+{{ confirmation_link }}

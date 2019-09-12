@@ -1,0 +1,40 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+<div class="ui stackable grid">
+    <div class="fourteen wide column">
+        <h1 class="ui header">Tickets</h1>
+    </div>
+    <div class="two wide column right aligned">
+        <a class="ui primary button" href="{% url 'support:tickets:add' %}">Create</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<table class="stackable ui celled table">
+    <thead>
+    <tr>
+        <th>Code</th>
+        <th>Title</th>
+        <th>Assigned by</th>
+        <th>Assigneee</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>
+            <a href="{% url 'support:tickets:detail' pk=object.pk %}">{{ object.code }}</a>
+        </td>
+        <td>{{ object.title }}</td>
+        <td>{{ object.user }}</td>
+        <td>{{ object.assignee|default:"" }}</td>
+        <td>{{ object.status }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% include 'app/pagination.html' with is_paginated=is_paginated paginator=paginator %}
+{% endblock %}

@@ -1,0 +1,33 @@
+/*!
+ * Start Bootstrap - Scrolling Nav (https://startbootstrap.com/template-overviews/scrolling-nav)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-scrolling-nav/blob/master/LICENSE)
+ */
+header {
+  padding: 156px 0 100px;
+  background-color: #000;
+}
+
+section {
+  padding: 150px 0;
+}
+
+@font-face {
+  font-family: phantasm;
+  src: url(PhantasmAllCaps.ttf);
+}
+
+#logo {
+  font-family: phantasm;
+  color: #fff;
+}
+
+#main-block {
+  background-image: url('/images/nasa-Q1p7bh3SHj8-unsplash.jpg');
+  background-position: 0 50%;
+  /* color: #000 !important; */
+}
+
+#mainNav {
+  background-color: #000 !important;
+}

@@ -1,0 +1,21 @@
+{% extends 'tickets/detail_base.html' %}
+{% block main_content %}
+    <div class="ui segment">
+        <h2 class="ui header">Settings</h2>
+        {% include 'form/errors.html' with form=form %}
+        <form class="ui form" method="POST" action="" novalidate>
+            {% csrf_token %}
+            {% if form.status %}
+                {% include 'form/field.html' with field=form.status %}
+            {% endif %}
+            {% if form.assignee %}
+                {% include 'form/field.html' with field=form.assignee %}
+            {% endif %}
+            {% include 'form/field.html' with field=form.title %}
+            {% include 'form/field.html' with field=form.description %}
+            {% include 'form/field.html' with field=form.container %}
+            {% include 'form/field.html' with field=form.domain %}
+            <button class="ui primary button">Save</button>
+        </form>
+    </div>
+{% endblock %}

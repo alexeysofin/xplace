@@ -1,0 +1,16 @@
+<h3 class="ui header">RAM</h3>
+<p><strong>Total</strong>: {{ ram_total|default:"0" }} MB</p>
+<p><strong>Used</strong>: {{ ram_used|default:"0" }} MB</p>
+<div class="ui blue small progress" data-percent="{{ ram_percent|default:"0" }}">
+    <div class="bar" style="width: {{ ram_percent|default:"0" }}%;">
+        <div class="progress">{{ ram_used|default:"0" }}</div>
+    </div>
+</div>
+<h3 class="ui header">Disk size</h3>
+<p><strong>Total</strong>: {{ disk_size_total|default:"0" }} GB</p>
+<p><strong>Used</strong>: {{ disk_size_used|default:"0" }} GB</p>
+<div class="ui blue small progress" data-percent="{{ disk_size_percent|default:"0" }}">
+    <div class="bar" style="width: {{ disk_size_percent|default:"0" }}%;">
+        <div class="progress">{{ disk_size_percent|default:"0" }}</div>
+    </div>
+</div>

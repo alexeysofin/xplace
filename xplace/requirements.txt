@@ -1,0 +1,17 @@
+django==2.1.7
+psycopg2-binary==2.7.7
+Pillow==5.4.1
+django-environ==0.4.5
+validators==0.12.4
+django-redis==4.10.0
+sshpubkeys==3.1.0
+celery==4.2.1
+raven==6.10.0
+django-celery-beat==1.4.0
+django-extensions==2.1.6
+gunicorn==19.9.0
+redis==2.10.6
+nameko==2.11.0
+django-choices==1.6.2
+django-cors-headers==2.4.0
+djangorestframework==3.9.1

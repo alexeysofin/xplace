@@ -1,0 +1,9 @@
+{{ticket.title}}
+
+{{ticket.description}}
+
+
+{{ticket.user}}
+
+
+{{ticket_url}}

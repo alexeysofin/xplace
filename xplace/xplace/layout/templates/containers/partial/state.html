@@ -1,0 +1,10 @@
+<div id="template-state" {% if object.event_id %}data-event_id="{{object.event_id}}"{% endif %}>
+{% if object.state == "STOPPED" %}
+    <i class="close icon"></i>
+{% elif object.state == "RUNNING" %}
+    <i class="check icon"></i>
+{% else %}
+    <div class="ui active inline loader"></div>
+{% endif %}
+{{ object.state }}
+</div>

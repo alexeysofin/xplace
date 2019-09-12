@@ -1,0 +1,12 @@
+<form class="ui form" method="GET" action="">
+    <div class="ui stackable grid">
+        <div class="fourteen wide column">
+          <div class="field">
+              {% include 'form/field.html' with field=filter_form.query nolabel=True %}
+          </div>
+        </div>
+        <div class="two wide column right aligned">
+            <button type="submit" class="ui secondary button" >Search</button>
+        </div>
+    </div>
+</form>

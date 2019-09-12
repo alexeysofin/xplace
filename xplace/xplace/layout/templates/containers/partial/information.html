@@ -1,0 +1,31 @@
+<div class="ui segment" id="template-information">
+    <h2 class="ui header">Information</h2>
+    <div class="ui grid">
+        <div class="five wide column">
+            <h4 class="ui header definition">Name</h4>
+            <p>{{ object.name }}</p>
+            <h4 class="ui header definition">Hostname</h4>
+            <p>{{ object.hostname }}</p>
+            <h4 class="ui header definition">Image</h4>
+            <p>{{ object.image.name }}</p>
+            <h4 class="ui header definition">State</h4>
+            <p>{{ object.state }}</p></div>
+        <div class="five wide column">
+            <h4 class="ui header definition">SSH Public IP</h4>
+            <p>{{ object.host.public_ipv4 }}</p>
+            <h4 class="ui header definition">SSH Public PORT</h4>
+            <p>{{ object.ssh_port }}</p>
+            <h4 class="ui header definition">Public IP</h4>
+            <p>{{ object.public_ipv4|default:"none" }}</p>
+            <h4 class="ui header definition">Private IP</h4>
+            <p>{{ object.private_ipv4|default:"none" }}</p>
+        </div>
+        <div class="six wide column">
+            <h4 class="ui header definition">RAM</h4>
+            <p>{{ object.ram }} MB</p>
+            <h4 class="ui header definition">Disk size</h4>
+            <p>{{ object.disk_size }} GB</p>
+            <h4 class="ui header definition">CPU</h4>
+            <p>{{ object.num_cpus }} cores</p></div>
+    </div>
+</div>

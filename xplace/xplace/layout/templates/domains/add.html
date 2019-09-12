@@ -1,0 +1,21 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}
+    <h1 class="ui header">Create domain</h1>
+{% endblock %}
+{% block content %}
+{% include 'form/errors.html' with form=form %}
+<div class="ui segment">
+    <form class="ui form" method="POST" action="" novalidate>
+        {% csrf_token %}
+        {% include 'form/field.html' with field=form.name %}
+        {% include 'form/field.html' with field=form.include_sub_domains %}
+        {% include 'form/field.html' with field=form.reverse_proxy %}
+        {% include 'form/field.html' with field=form.destination_ip %}
+        {% include 'form/field.html' with field=form.destination_http_port %}
+        {% include 'form/field.html' with field=form.destination_https_port %}
+        {% include 'form/field.html' with field=form.user %}
+        <button class="ui primary button">Create</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'containers/detail_base.html' %}
+{% block main_content %}
+    <div class="ui segment">
+        <h2 class="ui header">Are you sure you want to restore from backup {{backup.created_at}}?</h2>
+        {% include 'form/errors.html' with form=form %}
+        <form class="ui form" method="POST" action="" novalidate>
+            {% csrf_token %}
+            {{ form.backup_id }}
+            <button class="ui primary button">Restore</button>
+        </form>
+    </div>
+{% endblock %}
