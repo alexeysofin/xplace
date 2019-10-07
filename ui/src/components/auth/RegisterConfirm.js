@@ -25,7 +25,7 @@ class RegisterConfirm extends React.Component {
     }
 
     componentDidMount() {
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(this.props.location.search);
         this.props.onLoad({'token': urlParams.get('token')});
     }
     
