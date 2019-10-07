@@ -13,7 +13,9 @@ class UserViewSet(AtomicViewSetMixin, viewsets.ModelViewSet):
     queryset = models.User.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'update':
+        if self.action == 'create':
+            return serializers.UserCreateSerializer
+        elif self.action == 'update':
             return serializers.UserUpdateSerializer
         elif self.action == 'password':
             return serializers.UserPasswordSerializer
