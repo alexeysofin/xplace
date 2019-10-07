@@ -23,7 +23,7 @@ const mapDispatchToProps = dispatch => ({
 
 class ResetConfirm extends React.Component {
     submitForm = values => {
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(this.props.location.search);
         return this.props.onSubmit({...values, token: urlParams.get('token')});        
     }
 
