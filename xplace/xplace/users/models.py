@@ -80,7 +80,7 @@ class User(BaseModel, AbstractUser):
 
     is_email_verified = models.BooleanField(default=True)
 
-    username = None
+    username = models.CharField(max_length=255, blank=True)
 
     language = models.CharField(max_length=2, choices=UserLanguage.CHOICES)
 
