@@ -10,7 +10,6 @@ raven==6.10.0
 django-celery-beat==1.4.0
 django-extensions==2.1.6
 gunicorn==19.9.0
-redis==2.10.6
 nameko==2.11.0
 django-choices==1.6.2
 django-cors-headers==2.4.0
