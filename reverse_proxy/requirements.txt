@@ -1,1 +1,5 @@
 nameko==2.11.0
+jinja2==2.11.2
+pyparsing==2.4.6
+filelock==3.0.12
+lockfile==0.12.2
