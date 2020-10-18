@@ -16,6 +16,9 @@ import environ
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.urls import reverse_lazy
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from .menus import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,92 +32,88 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY', default='1!*66ndmp2w26h&%o5kac+br14(8hrde0kev__8k(!1y%5-ra(')
+SECRET_KEY = env.str(
+    "SECRET_KEY", default="1!*66ndmp2w26h&%o5kac+br14(8hrde0kev__8k(!1y%5-ra("
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    'rest_framework',
-
-    'drf_yasg',
-    'django_celery_beat',
-
-    'django_extensions',
-    'django_filters',
-
-    'corsheaders',
-
-    'raven.contrib.django.raven_compat',
-    
-    'xplace.base.apps.BaseConfig',
-    'xplace.layout.apps.LayoutConfig',
-    'xplace.users.apps.UsersConfig',
-    'xplace.users.ssh_keys.apps.SshKeysConfig',
-    'xplace.compute.apps.ComputeConfig',
-    'xplace.compute.containers.apps.ContainersConfig',
-    'xplace.compute.hosts.apps.HostsConfig',
-    'xplace.network.apps.NetworkConfig',
-    'xplace.network.domains.apps.DomainsConfig',
-    'xplace.support.apps.SupportConfig',
-    'xplace.events.apps.EventsConfig',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "drf_yasg",
+    "django_extensions",
+    "django_filters",
+    "corsheaders",
+    "django_dramatiq",
+    "xplace.base.apps.BaseConfig",
+    "xplace.layout.apps.LayoutConfig",
+    "xplace.users.apps.UsersConfig",
+    "xplace.users.ssh_keys.apps.SshKeysConfig",
+    "xplace.compute.apps.ComputeConfig",
+    "xplace.compute.containers.apps.ContainersConfig",
+    "xplace.compute.hosts.apps.HostsConfig",
+    "xplace.network.apps.NetworkConfig",
+    "xplace.network.domains.apps.DomainsConfig",
+    "xplace.support.apps.SupportConfig",
+    "xplace.events.apps.EventsConfig",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-
-    'corsheaders.middleware.CorsMiddleware',
-
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'xplace.urls'
+ROOT_URLCONF = "xplace.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'layout', 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "layout", "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'xplace.wsgi.application'
+WSGI_APPLICATION = "xplace.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='sqlite:///{}'.format(os.path.join(BASE_DIR, 'db.sqlite3')))
+    "default": env.db(
+        "DATABASE_URL",
+        default="sqlite:///{}".format(os.path.join(BASE_DIR, "db.sqlite3")),
+    )
 }
 
 for key, db in DATABASES.items():
-    db.setdefault('ATOMIC_REQUESTS', True)
-    db.setdefault('AUTOCOMMIT', True)
+    db.setdefault("ATOMIC_REQUESTS", True)
+    db.setdefault("AUTOCOMMIT", True)
 
 
 # Password validation
@@ -122,16 +121,16 @@ for key, db in DATABASES.items():
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -139,9 +138,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -156,81 +155,92 @@ STATICFILES_DIRS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = env.str('STATIC_URL', default='/django-static/')
-STATIC_ROOT = env.str('STATIC_ROOT', default=None)
+STATIC_URL = env.str("STATIC_URL", default="/django-static/")
+STATIC_ROOT = env.str("STATIC_ROOT", default=None)
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "users.User"
 
-FROM_EMAIL = env.str('FROM_EMAIL', default='no-reply@xplace.pro')
+FROM_EMAIL = env.str("FROM_EMAIL", default="no-reply@xplace.pro")
 DEFAULT_FROM_EMAIL = FROM_EMAIL
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-EMAIL_CONFIG = env.email_url(
-    'EMAIL_URL', default='consolemail://')
+EMAIL_CONFIG = env.email_url("EMAIL_URL", default="consolemail://")
 
 vars().update(EMAIL_CONFIG)
 
-RAVEN_CONFIG = {
-    'dsn': env.str('RAVEN_DSN', default=None)
+SENTRY_DSN = env.str("SENTRY_DSN", default=None)
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+    )
+
+CACHES = {"default": env.cache("CACHE_URL", default="dummycache://")}
+
+DRAMATIQ_BROKER_URL = env.str("DRAMATIQ_BROKER_URL", default="amqp://xplace:xplace@rabbitmq:5672")
+DRAMATIQ_RESULT_URL = env.str("DRAMATIQ_RESULT_URL", default="redis://redis:6379")
+
+DRAMATIQ_BROKER = {
+    "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
+    "OPTIONS": {
+        "url": DRAMATIQ_BROKER_URL,
+    },
+    "MIDDLEWARE": [
+        "dramatiq.middleware.Prometheus",
+        "dramatiq.middleware.AgeLimit",
+        "dramatiq.middleware.TimeLimit",
+        "dramatiq.middleware.Callbacks",
+        "dramatiq.middleware.Retries",
+    ],
 }
 
-
-CACHES = {
-    "default": env.cache('CACHE_URL', default='dummycache://')
+DRAMATIQ_RESULT_BACKEND = {
+    "BACKEND": "dramatiq.results.backends.redis.RedisBackend",
+    "BACKEND_OPTIONS": {
+        "url": DRAMATIQ_RESULT_URL,
+    },
+    "MIDDLEWARE_OPTIONS": {"result_ttl": 3600000},
 }
 
-CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', default=None)
-CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', default='memory://celery//')
-CELERY_RESULT_EXPIRES = 3600
-CELERY_TASK_ALWAYS_EAGER = env.bool(
-    'CELERY_TASK_ALWAYS_EAGER', default=DEBUG)
-
-LOGIN_REDIRECT_URL = reverse_lazy('compute:containers:list')
-LOGIN_URL = '/account/login/'
-LOGOUT_URL = '/account/logout/'
+LOGIN_REDIRECT_URL = reverse_lazy("compute:containers:list")
+LOGIN_URL = "/account/login/"
+LOGOUT_URL = "/account/logout/"
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "xplace.users.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'xplace.users.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication'
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 25
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 25,
 }
 
-ALLOWED_CONFIRM_DOMAINS = env.list('ALLOWED_CONFIRM_DOMAINS', default=[
-    'localhost',
-    'xplace.pro'
-])
+ALLOWED_CONFIRM_DOMAINS = env.list(
+    "ALLOWED_CONFIRM_DOMAINS", default=["localhost", "xplace.pro"]
+)
 
 
-SIGNUP_CONFIRMATION_PATH = env.str('SIGNUP_CONFIRMATION_PATH', default='/register-confirm')
-RESET_PASSWORD_CONFIRMATION_PATH = env.str('RESET_PASSWORD_CONFIRMATION_PATH', default='/reset-confirm')
+SIGNUP_CONFIRMATION_PATH = env.str(
+    "SIGNUP_CONFIRMATION_PATH", default="/register-confirm"
+)
+RESET_PASSWORD_CONFIRMATION_PATH = env.str(
+    "RESET_PASSWORD_CONFIRMATION_PATH", default="/reset-confirm"
+)
 
 
 SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
-      'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-      }
-   },
-   'USE_SESSION_AUTH': True
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+    },
+    "USE_SESSION_AUTH": True,
 }
 
 CORS_ORIGIN_WHITELIST = env.list(
-    'CORS_ORIGIN_WHITELIST',
-    default=[
-        'localhost:3000',
-        '127.0.0.1:3000'
-    ]
+    "CORS_ORIGIN_WHITELIST", default=["http://localhost:3000", "http://127.0.0.1:3000"]
 )
 
 APPEND_SLASH = False
@@ -241,6 +251,7 @@ class StaticFieldFilter(logging.Filter):
     Python logging filter that adds the given static contextual information
     in the ``fields`` dictionary to all logging records.
     """
+
     def __init__(self, fields):
         self.static_fields = fields
 
@@ -255,57 +266,52 @@ class RequestFilter(logging.Filter):
     Python logging filter that removes the (non-pickable) Django ``request``
     object from the logging record.
     """
+
     def filter(self, record):
-        if hasattr(record, 'request'):
+        if hasattr(record, "request"):
             del record.request
         return True
 
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'root': {
-        'level': 'INFO',
-        'handlers': ['console', 'sentry'],
+    "version": 1,
+    "disable_existing_loggers": False,
+    "root": {
+        "level": "INFO",
+        "handlers": ["console"],
     },
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s '
-                      '%(process)d %(thread)d %(message)s'
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s "
+            "%(process)d %(thread)d %(message)s"
         },
     },
-    'handlers': {
-        'sentry': {
-            'level': 'WARNING',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'tags': {'custom-tag': 'x'},
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
         },
     },
-    'filters': {
-        'static_fields': {
-            '()': StaticFieldFilter,
-            'fields': {
-                'project': 'xplace',
-                'environment': 'production',
+    "filters": {
+        "static_fields": {
+            "()": StaticFieldFilter,
+            "fields": {
+                "project": "xplace",
+                "environment": "production",
             },
         },
-        'django_exc': {
-            '()': RequestFilter,
+        "django_exc": {
+            "()": RequestFilter,
         },
     },
-    'loggers': {
-        'streaming': {'handlers': ['sentry'], 'level': 'INFO'}
-    },
+    # 'loggers': {
+    #     'streaming': {'handlers': ['sentry'], 'level': 'INFO'}
+    # },
 }
 
 NAMEKO_CONFIG = {
-    'AMQP_URI': env.str('AMQP_URI',
-                        'pyamqp://guest:guest@localhost:5672/xplace')
+    "AMQP_URI": env.str("AMQP_URI", "pyamqp://guest:guest@localhost:5672/xplace")
 }
 
 MAX_BACKUPS = 2

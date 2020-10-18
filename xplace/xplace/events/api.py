@@ -1,4 +1,3 @@
-from celery.result import AsyncResult
 from rest_framework.generics import RetrieveAPIView
 
 from xplace.events import serializers

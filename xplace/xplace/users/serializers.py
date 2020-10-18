@@ -39,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
                 self.context['request'], user)
 
             transaction.on_commit(
-                lambda: tasks.send_invite_confirmation.delay(
+                lambda: tasks.send_invite_confirmation.send(
                     user.email, link)
             )
 

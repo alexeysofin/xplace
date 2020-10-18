@@ -1,0 +1,67 @@
+version: "3.4"
+
+services:
+  app:
+    image: xplace:latest
+    build: .
+    entrypoint: bash
+    command: sleep 1
+    volumes:
+      - ./xplace:/app
+
+  api:
+    image: xplace:latest
+    stdin_open: true
+    tty: true
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+    environment:
+      WAIT_FOR: db:5432,rabbitmq:5672,redis:6379
+      DATABASE_URL: postgresql://xplace:xplace@db:5432/xplace
+
+  worker:
+    image: xplace:latest
+    stdin_open: true
+    tty: true
+    command: python manage.py rundramatiq
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+    environment:
+      WAIT_FOR: db:5432,rabbitmq:5672,redis:6379
+      DATABASE_URL: postgresql://xplace:xplace@db:5432/xplace
+
+  rabbitmq:
+    image: 'bitnami/rabbitmq:latest'
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_USERNAME: xplace
+      RABBITMQ_PASSWORD: xplace
+  
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  
+  db:
+    image: "postgres:11"
+    command: ["postgres", "-c", "log_statement=all"]
+    environment:
+      - POSTGRES_USER=xplace
+      - POSTGRES_PASSWORD=xplace
+      - POSTGRES_DB=xplace
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

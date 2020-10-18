@@ -53,7 +53,7 @@ class AddView(LoginRequiredMixin,
         )
 
         transaction.on_commit(
-            lambda: tasks.send_invite_confirmation.delay(
+            lambda: tasks.send_invite_confirmation.send(
                 form.instance.email, link)
         )
 

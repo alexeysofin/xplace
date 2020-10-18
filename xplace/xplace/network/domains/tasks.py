@@ -1,4 +1,4 @@
-from celery import shared_task
+import dramatiq
 
 from django.conf import settings
 
@@ -11,7 +11,7 @@ def get_reverse_proxy_rpc_name(domain):
     return 'network.reverse_proxy.{}'.format(domain.reverse_proxy.hostname)
 
 
-@shared_task()
+@dramatiq.actor
 def create_backends(domain_id):
     domain = Domain.objects.get(id=domain_id)
 
@@ -30,7 +30,7 @@ def create_backends(domain_id):
     domain.save()
 
 
-@shared_task()
+@dramatiq.actor
 def update_backends(domain_id):
     domain = Domain.objects.get(id=domain_id)
 
@@ -48,7 +48,7 @@ def update_backends(domain_id):
             })
 
 
-@shared_task()
+@dramatiq.actor
 def delete_backends(domain_id):
     domain = Domain.objects.get(id=domain_id)
 

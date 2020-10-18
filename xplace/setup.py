@@ -38,7 +38,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'xplace = xplace.manage:main',
+            'xplace = manage:main',
         ]
     },
 )

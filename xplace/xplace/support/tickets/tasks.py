@@ -1,4 +1,4 @@
-from celery import shared_task
+import dramatiq
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -26,7 +26,7 @@ def get_admin_emails(ticket):
     return admin_emails
 
 
-@shared_task()
+@dramatiq.actor
 def send_ticket_created(ticket_id, ticket_url):
     ticket = models.Ticket.objects.get(id=ticket_id)
 
@@ -55,7 +55,7 @@ def send_ticket_created(ticket_id, ticket_url):
         send(admin_emails)
 
 
-@shared_task()
+@dramatiq.actor
 def send_ticket_closed(ticket_id, ticket_url):
     ticket = models.Ticket.objects.get(id=ticket_id)
 
@@ -84,7 +84,7 @@ def send_ticket_closed(ticket_id, ticket_url):
         send(admin_emails)
 
 
-@shared_task()
+@dramatiq.actor
 def send_ticket_comment(comment_id, ticket_url):
     comment = models.TicketComment.objects.get(id=comment_id)
 

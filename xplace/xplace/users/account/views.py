@@ -69,7 +69,7 @@ class SignUpView(FormView):
         )
 
         transaction.on_commit(
-            lambda: send_registration_link.delay(email, link)
+            lambda: send_registration_link.send(email, link)
         )
 
         return super().form_valid(form)
@@ -98,7 +98,7 @@ class SignUpConfirmView(RedirectView):
         token_obj.delete()
 
         transaction.on_commit(
-            lambda: send_welcome.delay(user.email)
+            lambda: send_welcome.send(user.email)
         )
 
         login(self.request, user)
@@ -139,7 +139,7 @@ class ResetPasswordView(FormView):
             )
 
             transaction.on_commit(
-                lambda: send_reset_password_link.delay(email, link)
+                lambda: send_reset_password_link.send(email, link)
             )
 
         return super().form_valid(form)
@@ -176,7 +176,7 @@ class ResetPasswordConfirmView(FormView):
         token_obj.delete()
 
         transaction.on_commit(
-            lambda: send_reset_password_notification.delay(user.email)
+            lambda: send_reset_password_notification.send(user.email)
         )
 
         login(self.request, user)

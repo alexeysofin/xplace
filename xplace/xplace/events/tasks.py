@@ -1,17 +1,7 @@
-import time
+import dramatiq
 
-from celery import shared_task
+from xplace.base import actor
 
-
-@shared_task(bind=True)
-def test(self, seconds, exc=None):
-    self.update_state(meta={'test': 2})
-
-    time.sleep(seconds)
-
-    if exc:
-        raise RuntimeError(exc)
-
-    return {
-        ''
-    }
+@dramatiq.actor(actor_class=actor.Actor, store_results=True)
+def test():
+    return 1

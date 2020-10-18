@@ -53,7 +53,7 @@ class AddView(LoginRequiredMixin, generic.CreateView):
                     kwargs={'pk': form.instance.pk})
         )
         transaction.on_commit(
-            lambda: tasks.send_ticket_created.delay(str(form.instance.id),
+            lambda: tasks.send_ticket_created.send(str(form.instance.id),
                                                     ticket_url)
         )
 
@@ -101,7 +101,7 @@ class SettingsView(LoginRequiredMixin, OwnerQuerySetMixin, generic.UpdateView):
                         kwargs={'pk': form.instance.pk})
             )
             transaction.on_commit(
-                lambda: tasks.send_ticket_closed.delay(
+                lambda: tasks.send_ticket_closed.send(
                     str(form.instance.id), ticket_url)
             )
 
@@ -148,7 +148,7 @@ class CommentAddView(LoginRequiredMixin, generic.CreateView):
                     kwargs={'pk': form.instance.ticket.pk})
         )
         transaction.on_commit(
-            lambda: tasks.send_ticket_comment.delay(
+            lambda: tasks.send_ticket_comment.send(
                 str(form.instance.id), ticket_url)
         )
 

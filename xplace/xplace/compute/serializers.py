@@ -484,7 +484,7 @@ class ContainerPasswordResetSerializer(ContainerSerializer):
 
     def update(self, instance, validated_data):
         transaction.on_commit(
-            lambda: tasks.reset_container_password.delay(str(instance.id))
+            lambda: tasks.reset_container_password.send(str(instance.id))
         )
 
         return super().update(instance, validated_data)

@@ -129,7 +129,7 @@ class ContainerSettingsView(OwnerQuerySetMixin, LoginRequiredMixin, UpdateView):
         response = super().form_valid(form)
 
         transaction.on_commit(
-            lambda: update_container.delay(str(self.object.id))
+            lambda: update_container.send(str(self.object.id))
         )
 
         return response
@@ -151,7 +151,7 @@ class ContainerDeleteView(OwnerQuerySetMixin, LoginRequiredMixin, UpdateView):
         # TODO: ui DELETING STATE
 
         transaction.on_commit(
-            lambda: delete_container.delay(str(self.object.id))
+            lambda: delete_container.send(str(self.object.id))
         )
 
         return response
@@ -201,7 +201,7 @@ class ContainerResetPasswordView(OwnerQuerySetMixin,
         response = super().form_valid(form)
 
         transaction.on_commit(
-            lambda: reset_container_password.delay(str(self.object.id))
+            lambda: reset_container_password.send(str(self.object.id))
         )
 
         return response

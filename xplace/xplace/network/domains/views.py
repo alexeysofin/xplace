@@ -46,7 +46,7 @@ class DomainAddView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
 
         transaction.on_commit(
-            lambda: create_backends.delay(str(self.object.id))
+            lambda: create_backends.send(str(self.object.id))
         )
 
         return response
@@ -77,7 +77,7 @@ class DomainSettingsView(OwnerQuerySetMixin, LoginRequiredMixin, UpdateView):
         response = super().form_valid(form)
 
         transaction.on_commit(
-            lambda: update_backends.delay(str(self.object.id))
+            lambda: update_backends.send(str(self.object.id))
         )
 
         return response
@@ -97,7 +97,7 @@ class DomainDeleteView(OwnerQuerySetMixin, LoginRequiredMixin, UpdateView):
         response = super().form_valid(form)
 
         transaction.on_commit(
-            lambda: delete_backends.delay(str(self.object.id))
+            lambda: delete_backends.send(str(self.object.id))
         )
 
         return response

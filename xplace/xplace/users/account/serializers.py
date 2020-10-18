@@ -74,7 +74,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         )
 
         transaction.on_commit(
-            lambda: tasks.send_registration_link.delay(user.email, link)
+            lambda: tasks.send_registration_link.send(user.email, link)
         )
 
         return user
@@ -100,7 +100,7 @@ class ResetPasswordTokenCreateSerializer(serializers.Serializer):
                 self.context['request'], user)
 
             transaction.on_commit(
-                lambda: tasks.send_reset_password_link.delay(
+                lambda: tasks.send_reset_password_link.send(
                     user.email, link)
             )
 
@@ -278,7 +278,7 @@ class PasswordResetSerializer(serializers.ModelSerializer):
         # TODO: create event
 
         transaction.on_commit(
-            lambda: tasks.send_reset_password_notification.delay(user.email)
+            lambda: tasks.send_reset_password_notification.send(user.email)
         )
 
         user_logged_in.send(sender=user.__class__,
@@ -322,7 +322,7 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         user.save(update_fields=['is_email_verified'])
 
         transaction.on_commit(
-            lambda: tasks.send_welcome.delay(user.email)
+            lambda: tasks.send_welcome.send(user.email)
         )
 
         user_logged_in.send(sender=user.__class__,

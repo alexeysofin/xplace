@@ -3,7 +3,7 @@ import logging
 import shlex
 import uuid
 
-from celery import shared_task
+import dramatiq
 
 from django.conf import settings
 from django.core.cache import cache
@@ -27,7 +27,7 @@ def get_host_rpc_name(container):
     return 'compute.host.{}'.format(container.host.hostname)
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic
 def create_container(container_id, ssh_keys=()):
     container = models.Container.objects.get(
@@ -102,7 +102,7 @@ def create_container(container_id, ssh_keys=()):
     }
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic
 def change_container_state(container_id, power_action, create_event=True):
     container = models.Container.objects.get(id=container_id)
@@ -141,7 +141,7 @@ def change_container_state(container_id, power_action, create_event=True):
     }
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic()
 def delete_container(container_id):
     container = models.Container.objects.get(id=container_id)
@@ -163,7 +163,7 @@ def delete_container(container_id):
     }
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic()
 def resize_container_storage(container_id):
     container = models.Container.objects.get(id=container_id)
@@ -187,7 +187,7 @@ def resize_container_storage(container_id):
     }
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic()
 def update_container(container_id, return_to_state):
     container = models.Container.objects.get(id=container_id)
@@ -212,7 +212,7 @@ def update_container(container_id, return_to_state):
     }
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic
 def reset_container_password(container_id):
     container = models.Container.objects.get(id=container_id)
@@ -252,7 +252,7 @@ def reset_container_password(container_id):
     )
 
 
-@shared_task()
+@dramatiq.actor
 @transaction.atomic()
 def force_container_state(hostname, state):
     container = models.Container.objects.get(hostname=hostname)
@@ -276,7 +276,7 @@ def force_container_state(hostname, state):
         )
 
 
-@shared_task()
+@dramatiq.actor
 @transaction.atomic()
 def create_container_backup(backup_id):
     backup = models.Backup.objects.get(id=backup_id)
@@ -358,7 +358,7 @@ def force_backup_container(container_id):
               container.hostname)
 
 
-@shared_task()
+@dramatiq.actor
 def backup_all_containers():
     lock = cache.client.lock(
         const.BACKUP_LOCK_KEY.format('all'), timeout=3600)
@@ -375,7 +375,7 @@ def backup_all_containers():
                 _log.error('Could not back up container', exc_info=True)
 
 
-@shared_task()
+@dramatiq.actor
 def delete_backup(backup_id):
     backup = models.Backup.objects.get(id=backup_id)
 
@@ -390,7 +390,7 @@ def delete_backup(backup_id):
     }
 
 
-@shared_task()
+@dramatiq.actor
 def cleanup_backups(container_id):
     try:
         container = models.Container.objects.get(id=container_id)
@@ -412,7 +412,7 @@ def cleanup_backups(container_id):
                 backup.delete()
 
 
-@shared_task()
+@dramatiq.actor
 @transaction.atomic()
 def restore_from_backup(backup_id):
     backup = models.Backup.objects.get(id=backup_id)

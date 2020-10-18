@@ -3,7 +3,7 @@ import logging
 import shlex
 import uuid
 
-from celery import shared_task
+import dramatiq
 
 from django.conf import settings
 from django.core.cache import cache
@@ -30,7 +30,7 @@ def get_host_rpc_name(container):
     return 'compute.host.{}'.format(container.host.hostname)
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic
 def create_container(container_id, ssh_keys=()):
     container = Container.objects.get(id=container_id)
@@ -96,7 +96,7 @@ def create_container(container_id, ssh_keys=()):
     container.save()
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic
 def change_container_state(container_id, power_action):
     container = Container.objects.get(id=container_id)
@@ -133,7 +133,7 @@ def change_container_state(container_id, power_action):
         )
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic()
 def delete_container(container_id):
     container = Container.objects.get(id=container_id)
@@ -145,7 +145,7 @@ def delete_container(container_id):
     container.delete()
 
 
-@shared_task
+@dramatiq.actor
 def update_container(container_id):
     container = Container.objects.get(id=container_id)
 
@@ -156,7 +156,7 @@ def update_container(container_id):
         })
 
 
-@shared_task
+@dramatiq.actor
 @transaction.atomic
 def reset_container_password(container_id):
     container = Container.objects.get(id=container_id)
@@ -192,7 +192,7 @@ def reset_container_password(container_id):
     )
 
 
-@shared_task()
+@dramatiq.actor
 @transaction.atomic()
 def force_container_state(hostname, state):
     container = Container.objects.get(hostname=hostname)
@@ -220,7 +220,7 @@ def force_container_state(hostname, state):
         )
 
 
-@shared_task()
+@dramatiq.actor
 def backup_all_containers(container_id=None):
     lock = cache.client.lock(BACKUP_LOCK_KEY, timeout=21600)
 
@@ -297,7 +297,7 @@ def backup_all_containers(container_id=None):
         lock.release()
 
 
-@shared_task()
+@dramatiq.actor
 def cleanup_backups(container_id):
     try:
         container = Container.objects.get(id=container_id)
@@ -318,7 +318,7 @@ def cleanup_backups(container_id):
                 backup.delete()
 
 
-@shared_task()
+@dramatiq.actor
 @transaction.atomic()
 def restore_from_backup(container_id, backup_id):
     container = Container.objects.get(id=container_id)

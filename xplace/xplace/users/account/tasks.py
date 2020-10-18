@@ -1,10 +1,10 @@
-from celery import shared_task
+import dramatiq
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 
 
-@shared_task
+@dramatiq.actor
 def send_registration_link(email, link):
     send_mail(
         'xplace.pro registration confirmation',
@@ -20,7 +20,7 @@ def send_registration_link(email, link):
     )
 
 
-@shared_task
+@dramatiq.actor
 def send_welcome(email):
     send_mail(
         'Welcome to xplace.pro',
@@ -31,7 +31,7 @@ def send_welcome(email):
     )
 
 
-@shared_task
+@dramatiq.actor
 def send_reset_password_link(email, link):
     send_mail(
         'xplace.pro reset password confirmation',
@@ -48,7 +48,7 @@ def send_reset_password_link(email, link):
     )
 
 
-@shared_task
+@dramatiq.actor
 def send_reset_password_notification(email):
     send_mail(
         'Password reset at xplace.pro',
