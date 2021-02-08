@@ -4,15 +4,15 @@ import os
 import raven
 from raven.contrib.celery import register_signal, register_logger_signal
 
-from xplace.compute import tasks
-
 from celery import Celery as CeleryBase
 from celery.schedules import crontab
 
-from django.conf import settings
-
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "xplace.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "xplace.settings")  # NOQA
+
+from xplace.compute import tasks  # NOQA
+
+from django.conf import settings  # NOQA
 
 
 class Celery(CeleryBase):
