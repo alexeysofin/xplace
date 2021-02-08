@@ -10,8 +10,6 @@ from celery.schedules import crontab
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "xplace.settings")  # NOQA
 
-from xplace.compute import tasks  # NOQA
-
 from django.conf import settings  # NOQA
 
 
@@ -37,11 +35,11 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
-
-@app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    # Executes every Monday morning at 0:30 a.m.
-    sender.add_periodic_task(
-        crontab(hour=0, minute=30, day_of_week=1),
-        tasks.backup_all_containers.s(),
-    )
+app.conf.beat_schedule = {
+    "add-every-30-seconds": {
+        "task": "xplace.compute.tasks.backup_all_containers",
+        "schedule": crontab(hour=0, minute=30, day_of_week=1),
+        "args": (),
+    },
+}
+app.conf.timezone = "UTC"
