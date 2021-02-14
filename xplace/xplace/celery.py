@@ -38,7 +38,7 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     "add-every-30-seconds": {
         "task": "xplace.compute.tasks.backup_all_containers",
-        "schedule": crontab(hour=0, minute=30, day_of_week=2),
+        "schedule": crontab(hour=0, minute=30, day_of_week=1),
         "args": (),
     },
 }
