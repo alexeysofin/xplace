@@ -35,7 +35,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "terser": "^3.14.1"
+    "terser": "^4.8.1"
   },
   "homepage": "https://xplace.pro/dashboard"
 }
